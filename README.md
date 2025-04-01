@@ -47,3 +47,13 @@ task-manager/
 ├── tsconfig.json      # TypeScript configuration
 └── vite.config.ts     # Vite configuration
 ```
+
+## Todo
+
+- Folder structure: app, pages, features, packages
+- React Router
+- Supabase tasks table
+- Generate db types
+- react-query for API
+- Tailwind, shadcn
+- Zustand
