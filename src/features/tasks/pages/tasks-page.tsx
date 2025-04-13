@@ -1,17 +1,9 @@
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getTasks } from "../api/get-tasks";
+import { useGetTasks } from "../api/get-tasks";
 import { Task } from "@packages/supabase/entity.types";
 
 export default function TasksPage() {
-  const {
-    data: tasks,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getTasks,
-  });
+  const { data: tasks, isLoading, error } = useGetTasks();
 
   if (isLoading) {
     return (
