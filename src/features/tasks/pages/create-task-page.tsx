@@ -1,35 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@packages/supabase/supabase-client";
+import { useUpsertTask } from "../api/upsert-task";
 
 export default function CreateTaskPage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { mutate: upsertTask, isPending, error } = useUpsertTask();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-
-    try {
-      const { error } = await supabase.from("tasks").insert([
-        {
-          title,
-          description,
-          is_done: false,
-        },
-      ]);
-
-      if (error) throw error;
-      navigate("/");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create task");
-    } finally {
-      setIsSubmitting(false);
-    }
+    upsertTask(
+      {
+        title,
+        description,
+        is_done: false,
+      },
+      {
+        onSuccess: () => navigate("/"),
+      }
+    );
   };
 
   return (
@@ -70,7 +60,11 @@ export default function CreateTaskPage() {
             />
           </div>
 
-          {error && <div className="text-red-600 text-sm">{error}</div>}
+          {error && (
+            <div className="text-red-600 text-sm">
+              {error instanceof Error ? error.message : "Failed to create task"}
+            </div>
+          )}
 
           <div className="flex justify-end space-x-3">
             <button
@@ -82,10 +76,10 @@ export default function CreateTaskPage() {
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isPending}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? "Creating..." : "Create Task"}
+              {isPending ? "Creating..." : "Create Task"}
             </button>
           </div>
         </form>
