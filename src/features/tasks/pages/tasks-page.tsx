@@ -61,12 +61,6 @@ export default function TasksPage() {
           <p className="text-gray-600">
             No tasks yet. Start by adding a new task.
           </p>
-          <Link
-            to="/tasks/new"
-            className="mt-4 inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-          >
-            Add New Task
-          </Link>
         </div>
       )}
       <Link
